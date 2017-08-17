@@ -1,9 +1,6 @@
 {
     "name": "imemento/laravel-auth",
     "description": "Our custom auth provider for Laravel",
-    "keywords": [
-        "auth"
-    ],
     "homepage": "https://gitlab.com/imemento/composer/laravel-auth",
     "license": "MIT",
     "authors": [

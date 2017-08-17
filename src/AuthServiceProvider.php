@@ -3,7 +3,6 @@
 namespace Imemento\Auth;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Foundation\Application as LaravelApplication;
 use Auth;
 
 class AuthServiceProvider extends ServiceProvider
@@ -24,7 +23,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         // Static User Provider
         Auth::provider('static', function ($app, array $config) {
-            return new StaticUserProvider($app->make($config['model']));
+            return new StaticUserProvider($config['model']);
         });
 
         // Custom JWT Guard

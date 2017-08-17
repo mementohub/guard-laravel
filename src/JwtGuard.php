@@ -2,11 +2,11 @@
 
 namespace Imemento\Auth;
 
-use App\User;
 use Illuminate\Auth\GuardHelpers;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
+use Imemento\JWT\JWT;
 
 class JwtGuard implements Guard
 {
@@ -65,9 +65,9 @@ class JwtGuard implements Guard
 
         $tokens = collect($tokens);
 
-        //if the token is in array, get the key and create user
+        //if the token is in array, get the key and create the user
         if($user_id = $tokens->search($this->getTokenForRequest(), true)) {
-            return $this->user = new User(['id' => $user_id]);
+            return $this->user = $this->provider->retrieveById($user_id);
         }
 
         return null;

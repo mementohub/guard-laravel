@@ -27,13 +27,17 @@ class StaticUserProvider implements UserProvider
 
     /**
      * Retrieve a user by their unique identifier.
+     * We're not actually retrieving, but creating the user
      *
      * @param  mixed $identifier
      * @return UserContract|\Illuminate\Database\Eloquent\Model|null
      */
     public function retrieveById($identifier)
     {
-        return $this->createModel();
+        $model = $this->createModel();
+        $model->id = $identifier;
+
+        return $model;
     }
 
     /**
