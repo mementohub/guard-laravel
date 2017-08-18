@@ -1,6 +1,6 @@
 <?php
 
-namespace Imemento\Auth;
+namespace iMemento\Auth\Laravel;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Auth;

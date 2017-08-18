@@ -1,12 +1,13 @@
 <?php
 
-namespace Imemento\Auth;
+namespace iMemento\Auth\Laravel;
 
 use Illuminate\Auth\GuardHelpers;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
-use Imemento\JWT\JWT;
+use Illuminate\Support\Str;
+use iMemento\JWT\JWT;
 
 class JwtGuard implements Guard
 {
@@ -20,18 +21,11 @@ class JwtGuard implements Guard
     protected $request;
 
     /**
-     * The name of the query string item from the request containing the API token.
+     * The name of the token key.
      *
      * @var string
      */
-    protected $inputKey;
-
-    /**
-     * The name of the token "column" in persistent storage.
-     *
-     * @var string
-     */
-    protected $storageKey;
+    protected $tokenKey;
 
     /**
      * Create a new authentication guard.
@@ -42,8 +36,7 @@ class JwtGuard implements Guard
     {
         $this->request = Request::capture();
         $this->provider = $provider;
-        $this->inputKey = 'api_token';
-        $this->storageKey = 'api_token';
+        $this->tokenKey = 'X-Memento-Key';
     }
 
     /**
@@ -53,48 +46,38 @@ class JwtGuard implements Guard
      */
     public function user()
     {
-        if (! is_null($this->user)) {
+        if(!is_null($this->user)) {
             return $this->user;
         }
 
-        $tokens = [
-            1 => 'christiantour1',
-            2 => 'christiantour2',
-            3 => 'christiantour3',
-        ];
+        $jwt = new JWT($this->getTokenForRequest());
 
-        $tokens = collect($tokens);
+        $issuer = $jwt->getIssuer();
 
-        //if the token is in array, get the key and create the user
-        if($user_id = $tokens->search($this->getTokenForRequest(), true)) {
-            return $this->user = $this->provider->retrieveById($user_id);
-        }
+        $publicKey = base_path('keys/' . $issuer);
 
-        return null;
+        $payload = $jwt->decode($publicKey);
+
+        $this->user = $this->provider->createFromPayload($payload);
+
+        return $this->user;
     }
 
     /**
      * Get the token for the current request.
      *
      * @return string
+     * @throws \Exception
      */
     public function getTokenForRequest()
     {
-        $token = $this->request->query($this->inputKey);
+        $header = $this->request->header('Authorization', '');
 
-        if (empty($token)) {
-            $token = $this->request->input($this->inputKey);
+        if (Str::startsWith($header, $this->tokenKey . ' ')) {
+            return Str::substr($header, Str::length($this->tokenKey . ' '));
         }
 
-        if (empty($token)) {
-            $token = $this->request->bearerToken();
-        }
-
-        if (empty($token)) {
-            $token = $this->request->getPassword();
-        }
-
-        return $token;
+        throw new \Exception('Missing or invalid Authorization header.');
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Imemento\Auth;
+namespace iMemento\Auth\Laravel;
 
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Auth\Authenticatable as UserContract;
@@ -23,6 +23,25 @@ class StaticUserProvider implements UserProvider
     public function __construct($model)
     {
         $this->model = $model;
+    }
+
+    /**
+     * //TODO: we should remove the user array - we have sub instead
+     * //TODO: discuss more here
+     *
+     * @param $payload
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function createFromPayload($payload)
+    {
+        $model = $this->createModel();
+
+        $model->id = $payload->sub;
+        $model->name = $payload->name;
+        $model->roles = $payload->roles;
+        $model->agency = $payload->agency;
+
+        return $model;
     }
 
     /**
