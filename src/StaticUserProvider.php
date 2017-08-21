@@ -26,8 +26,6 @@ class StaticUserProvider implements UserProvider
     }
 
     /**
-     * //TODO: we should remove the user array - we have sub instead
-     * //TODO: discuss more here
      *
      * @param $payload
      * @return \Illuminate\Database\Eloquent\Model

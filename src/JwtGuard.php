@@ -51,7 +51,6 @@ class JwtGuard implements Guard
         }
 
         $jwt = new JWT($this->getTokenForRequest());
-
         $issuer = $jwt->getIssuer();
 
         $publicKey = base_path('keys/' . $issuer);
