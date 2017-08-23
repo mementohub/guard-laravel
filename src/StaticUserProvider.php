@@ -1,6 +1,6 @@
 <?php
 
-namespace iMemento\Auth\Laravel;
+namespace iMemento\Guard\Laravel;
 
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Auth\Authenticatable as UserContract;

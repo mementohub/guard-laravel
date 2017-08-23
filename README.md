@@ -1,2 +1,2 @@
-# Our custom auth provider for Laravel
+# Our custom guard for Laravel
 

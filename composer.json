@@ -1,7 +1,7 @@
 {
-    "name": "imemento/auth-laravel",
-    "description": "Our custom auth provider for Laravel",
-    "homepage": "https://gitlab.com/imemento/composer/auth-laravel",
+    "name": "imemento/guard-laravel",
+    "description": "Our custom guard for Laravel",
+    "homepage": "https://gitlab.com/imemento/composer/guard-laravel",
     "license": "MIT",
     "authors": [
         {
@@ -21,12 +21,12 @@
     },
     "autoload": {
         "psr-4": {
-            "iMemento\\Auth\\Laravel\\": "src"
+            "iMemento\\Guard\\Laravel\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "iMemento\\Auth\\Laravel\\Test\\": "tests"
+            "iMemento\\Guard\\Laravel\\Test\\": "tests"
         }
     },
     "scripts": {
@@ -38,7 +38,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Imemento\\Auth\\Laravel\\AuthServiceProvider"
+                "Imemento\\Guard\\Laravel\\AuthServiceProvider"
             ]
         }
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace iMemento\Auth\Laravel;
+namespace iMemento\Guard\Laravel;
 
 use Illuminate\Auth\GuardHelpers;
 use Illuminate\Http\Request;
