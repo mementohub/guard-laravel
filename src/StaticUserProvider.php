@@ -34,10 +34,10 @@ class StaticUserProvider implements UserProvider
     {
         $model = $this->createModel();
 
-        $model->id = $payload->sub;
-        $model->name = $payload->name;
-        $model->roles = $payload->roles;
-        $model->agency = $payload->agency;
+        //$model->id = $payload->sub;
+        //$model->name = $payload->name;
+        //$model->roles = $payload->roles;
+        //$model->agency = $payload->agency;
 
         return $model;
     }

@@ -50,10 +50,15 @@ class JwtGuard implements Guard
             return $this->user;
         }
 
+        //===========
+        //here we will need to do a bit of rewriting - needs to work without user
+        //or create a separate guard that doesn't care about user, just about valid jwt
+        //===========
+
         $jwt = new JWT($this->getTokenForRequest());
         $issuer = $jwt->getIssuer();
 
-        $publicKey = base_path('keys/' . $issuer);
+        $publicKey = openssl_get_publickey(file_get_contents(base_path('keys/' . $issuer)));
 
         $payload = $jwt->decode($publicKey);
 
