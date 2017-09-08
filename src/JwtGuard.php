@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Support\Str;
 use iMemento\JWT\JWT;
+use iMemento\JWT\Guard as TokenGuard;
 
 class JwtGuard implements Guard
 {
@@ -36,7 +37,7 @@ class JwtGuard implements Guard
     {
         $this->request = Request::capture();
         $this->provider = $provider;
-        $this->tokenKey = 'X-Memento-Key';
+        $this->tokenKey = 'Bearer';
     }
 
     /**
@@ -50,19 +51,11 @@ class JwtGuard implements Guard
             return $this->user;
         }
 
-        //===========
-        //here we will need to do a bit of rewriting - needs to work without user
-        //or create a separate guard that doesn't care about user, just about valid jwt
-        //===========
+        $token = new TokenGuard($this->getTokenForRequest());
+        $user = $token->getUser();
+        $roles = $token->getRoles();
 
-        $jwt = new JWT($this->getTokenForRequest());
-        $issuer = $jwt->getIssuer();
-
-        $publicKey = openssl_get_publickey(file_get_contents(base_path('keys/' . $issuer)));
-
-        $payload = $jwt->decode($publicKey);
-
-        $this->user = $this->provider->createFromPayload($payload);
+        $this->user = $this->provider->createFromPayload($user, $roles);
 
         return $this->user;
     }

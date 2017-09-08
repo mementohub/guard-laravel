@@ -27,17 +27,36 @@ class StaticUserProvider implements UserProvider
 
     /**
      *
-     * @param $payload
+     * @param $user
+     * @param $roles
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function createFromPayload($payload)
+    public function createFromPayload($user, $roles)
     {
         $model = $this->createModel();
 
-        //$model->id = $payload->sub;
-        //$model->name = $payload->name;
-        //$model->roles = $payload->roles;
-        //$model->agency = $payload->agency;
+        $permissions = config('permissions');
+
+        //build the User model
+        $model->id = $user->uid;
+        $model->agency_id = $user->aid;
+        $model->roles = $roles->ua;
+        $model->consumer_roles = $roles->cns;
+
+        //create the permissions array
+        $ua_permissions = [];
+        foreach($model->roles as $role) {
+            $ua_permissions = array_merge($ua_permissions, $permissions[$role]);
+        }
+
+        //create the consumer permissions array
+        $consumer_permissions = [];
+        foreach($model->consumer_roles as $role) {
+            $consumer_permissions = array_merge($consumer_permissions, $permissions[$role]);
+        }
+
+        //intersect the permissions arrays
+        $model->permissions = array_intersect($ua_permissions, $consumer_permissions);
 
         return $model;
     }
