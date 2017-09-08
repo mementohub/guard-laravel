@@ -23,7 +23,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         // Static User Provider
         Auth::provider('static', function ($app, array $config) {
-            return new StaticUserProvider($config['model']);
+            return new StaticUserProvider($config['model'], config('permissions'));
         });
 
         // Custom JWT Guard

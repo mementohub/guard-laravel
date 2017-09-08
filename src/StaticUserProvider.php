@@ -4,6 +4,7 @@ namespace iMemento\Guard\Laravel;
 
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Auth\Authenticatable as UserContract;
+use iMemento\JWT\Guard;
 
 class StaticUserProvider implements UserProvider
 {
@@ -16,13 +17,22 @@ class StaticUserProvider implements UserProvider
     protected $model;
 
     /**
+     * The permissions array.
+     *
+     * @var string
+     */
+    protected $permissions;
+
+    /**
      * Create a new database user provider.
      *
      * @param  string  $model
+     * @param  string  $permissions
      */
-    public function __construct($model)
+    public function __construct($model, $permissions)
     {
         $this->model = $model;
+        $this->permissions = $permissions;
     }
 
     /**
@@ -35,28 +45,7 @@ class StaticUserProvider implements UserProvider
     {
         $model = $this->createModel();
 
-        $permissions = config('permissions');
-
-        //build the User model
-        $model->id = $user->uid;
-        $model->agency_id = $user->aid;
-        $model->roles = $roles->ua;
-        $model->consumer_roles = $roles->cns;
-
-        //create the permissions array
-        $ua_permissions = [];
-        foreach($model->roles as $role) {
-            $ua_permissions = array_merge($ua_permissions, $permissions[$role]);
-        }
-
-        //create the consumer permissions array
-        $consumer_permissions = [];
-        foreach($model->consumer_roles as $role) {
-            $consumer_permissions = array_merge($consumer_permissions, $permissions[$role]);
-        }
-
-        //intersect the permissions arrays
-        $model->permissions = array_intersect($ua_permissions, $consumer_permissions);
+        $model = Guard::createUserModel($model, $user, $roles, $this->permissions);
 
         return $model;
     }

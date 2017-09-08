@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Support\Str;
-use iMemento\JWT\JWT;
 use iMemento\JWT\Guard as TokenGuard;
 
 class JwtGuard implements Guard
