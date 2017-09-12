@@ -1,7 +1,7 @@
 {
     "name": "imemento/guard-laravel",
     "description": "Our custom guard for Laravel",
-    "homepage": "https://gitlab.com/imemento/composer/guard-laravel",
+    "homepage": "https://gitlab.com/imemento/composer/packages/guard-laravel",
     "license": "MIT",
     "authors": [
         {
@@ -38,7 +38,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Imemento\\Guard\\Laravel\\AuthServiceProvider"
+                "iMemento\\Guard\\Laravel\\AuthServiceProvider"
             ]
         }
     }

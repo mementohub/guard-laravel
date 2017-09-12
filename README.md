@@ -1,7 +1,7 @@
 # iMemento JWT Guard for Laravel
 
 Takes care of the authorization and sets the roles and permissions for the user and consumer.
-Depends on the [iMemento JWT](https://gitlab.com/imemento/composer/jwt) package for JWT related tasks. Decrypting the tokens happens in the JWT package.
+Depends on the [iMemento JWT](https://gitlab.com/imemento/composer/packages/jwt) package for JWT related tasks. Decrypting the tokens happens in the JWT package.
 
 ## Install
 
