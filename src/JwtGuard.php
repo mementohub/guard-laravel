@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Support\Str;
 use iMemento\JWT\Guard as TokenGuard;
+use iMemento\JWT\Payload;
 
 class JwtGuard implements Guard
 {
@@ -51,7 +52,7 @@ class JwtGuard implements Guard
         }
 
         $token = new TokenGuard($this->getTokenForRequest());
-        $user = $token->getUser();
+        $user = Payload::getUser($token->getUser());
         $roles = $token->getRoles();
 
         $this->user = $this->provider->createFromPayload($user, $roles);

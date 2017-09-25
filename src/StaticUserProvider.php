@@ -4,17 +4,18 @@ namespace iMemento\Guard\Laravel;
 
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Auth\Authenticatable as UserContract;
-use iMemento\JWT\Guard;
+use Illuminate\Support\Facades\Session;
 
 class StaticUserProvider implements UserProvider
 {
 
     /**
-     * The Eloquent user model.
+     * The name of the Eloquent user model.
      *
      * @var string
      */
     protected $model;
+
 
     /**
      * The permissions array.
@@ -36,33 +37,32 @@ class StaticUserProvider implements UserProvider
     }
 
     /**
-     *
      * @param $user
      * @param $roles
      * @return \Illuminate\Database\Eloquent\Model
      */
     public function createFromPayload($user, $roles)
     {
-        $model = $this->createModel();
+        $model = $this->createModel($user);
 
-        $model = Guard::createUserModel($model, $user, $roles, $this->permissions);
+        $model->createPermissions($this->permissions, $roles);
 
         return $model;
     }
 
     /**
      * Retrieve a user by their unique identifier.
-     * We're not actually retrieving, but creating the user
+     * We're not actually retrieving by id, just fetching the user already decoded by our guard
      *
      * @param  mixed $identifier
      * @return UserContract|\Illuminate\Database\Eloquent\Model|null
      */
     public function retrieveById($identifier)
     {
-        $model = $this->createModel();
-        $model->id = $identifier;
+        if(!Session::has('user'))
+            return null;
 
-        return $model;
+        return $this->createModel(Session::get('user', []));
     }
 
     /**
@@ -115,13 +115,14 @@ class StaticUserProvider implements UserProvider
     /**
      * Create a new instance of the model.
      *
+     * @param $user
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function createModel()
+    public function createModel($user)
     {
         $class = '\\'.ltrim($this->model, '\\');
 
-        return new $class;
+        return new $class($user);
     }
 
     /**
