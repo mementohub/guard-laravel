@@ -12,8 +12,8 @@
     ],
     "require": {
         "php": "^7.1",
-        "illuminate/contracts": "^5.4",
-        "illuminate/support": "^5.4",
+        "illuminate/contracts": "~5.0",
+        "illuminate/support": "~5.0",
         "imemento/jwt": "dev-master",
         "imemento/exceptions": "dev-master",
         "imemento/exceptions-laravel": "dev-master",
@@ -48,5 +48,7 @@
     "repositories": [
         {"type": "composer", "url": "https://repo.packagist.com/imemento/"},
         {"packagist.org": false}
-    ]
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
