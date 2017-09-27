@@ -12,8 +12,6 @@
     ],
     "require": {
         "php": "^7.1",
-        "illuminate/contracts": "^5.4",
-        "illuminate/support": "^5.4",
         "imemento/jwt": "dev-master",
         "imemento/exceptions": "dev-master",
         "imemento/exceptions-laravel": "dev-master",
