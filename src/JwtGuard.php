@@ -26,7 +26,7 @@ class JwtGuard implements Guard
      *
      * @var string
      */
-    protected $tokenKey;
+    protected $token_key;
 
     /**
      * Create a new authentication guard.
@@ -37,7 +37,7 @@ class JwtGuard implements Guard
     {
         $this->request = Request::capture();
         $this->provider = $provider;
-        $this->tokenKey = 'Bearer';
+        $this->token_key = 'Bearer';
     }
 
     /**
@@ -54,6 +54,7 @@ class JwtGuard implements Guard
         //TODO: do we need the session_id here?
 
         $token = new TokenGuard($this->getTokenForRequest());
+
         $user = Payload::getUser($token->getUser());
         $roles = $token->getRoles();
 
@@ -72,8 +73,8 @@ class JwtGuard implements Guard
     {
         $header = $this->request->header('Authorization', '');
 
-        if (Str::startsWith($header, $this->tokenKey . ' ')) {
-            return Str::substr($header, Str::length($this->tokenKey . ' '));
+        if (Str::startsWith($header, $this->token_key . ' ')) {
+            return Str::substr($header, Str::length($this->token_key . ' '));
         }
 
         throw new \Exception('Missing or invalid Authorization header.');

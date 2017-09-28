@@ -17,7 +17,6 @@ class StaticUserProvider implements UserProvider
      */
     protected $model;
 
-
     /**
      * The permissions array.
      *
