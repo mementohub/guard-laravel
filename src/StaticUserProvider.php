@@ -5,6 +5,7 @@ namespace iMemento\Guard\Laravel;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Auth\Authenticatable as UserContract;
 use Illuminate\Support\Facades\Session;
+use iMemento\SDK\Authentication\User;
 
 class StaticUserProvider implements UserProvider
 {
@@ -20,7 +21,7 @@ class StaticUserProvider implements UserProvider
     /**
      * The permissions array.
      *
-     * @var string
+     * @var array
      */
     protected $permissions;
 
@@ -43,9 +44,16 @@ class StaticUserProvider implements UserProvider
      */
     public function createFromPayload($user, $roles)
     {
-        $model = $this->createModel($user);
+        //imemento auth user
+        $i_user = new User($user);
+        $i_user->createPermissions($this->permissions, (array) $roles);
 
-        $model->createPermissions($this->permissions, $roles);
+        //get the user data
+        $attributes = $i_user->getAttributes();
+
+        //create our Authenticatable User
+        $model = $this->createModel($attributes);
+        $model->user = $i_user;
 
         return $model;
     }

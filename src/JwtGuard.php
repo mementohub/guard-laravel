@@ -51,6 +51,8 @@ class JwtGuard implements Guard
             return $this->user;
         }
 
+        //TODO: do we need the session_id here?
+
         $token = new TokenGuard($this->getTokenForRequest());
         $user = Payload::getUser($token->getUser());
         $roles = $token->getRoles();
