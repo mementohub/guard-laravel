@@ -31,11 +31,12 @@ class JwtGuard implements Guard
     /**
      * Create a new authentication guard.
      *
-     * @param  \Illuminate\Contracts\Auth\UserProvider  $provider
+     * @param  \Illuminate\Contracts\Auth\UserProvider $provider
+     * @param Request                                  $request
      */
-    public function __construct(UserProvider $provider)
+    public function __construct(UserProvider $provider, Request $request)
     {
-        $this->request = Request::capture();
+        $this->request = $request;
         $this->provider = $provider;
         $this->token_key = 'Bearer';
     }

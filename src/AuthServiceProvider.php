@@ -12,8 +12,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //no need for a setup for now
-        //$this->setupConfig();
+        //
     }
 
     /**
@@ -28,16 +27,7 @@ class AuthServiceProvider extends ServiceProvider
 
         // Custom JWT Guard
         Auth::extend('jwt', function ($app, $name, array $config) {
-            return new JwtGuard(Auth::createUserProvider($config['provider']));
+            return new JwtGuard(Auth::createUserProvider($config['provider']), app('request'));
         });
-    }
-
-    protected function setupConfig()
-    {
-        $source = realpath(__DIR__.'/../resources/config/imemento-auth.php');
-
-        $this->publishes([$source => config_path('imemento-auth.php')]);
-
-        $this->mergeConfigFrom($source, 'imemento-auth');
     }
 }
