@@ -26,7 +26,7 @@ class JwtGuard implements Guard
      *
      * @var string
      */
-    protected $token_key;
+    protected $token_key = 'Bearer';
 
     /**
      * Create a new authentication guard.
@@ -38,7 +38,6 @@ class JwtGuard implements Guard
     {
         $this->request = $request;
         $this->provider = $provider;
-        $this->token_key = 'Bearer';
     }
 
     /**
