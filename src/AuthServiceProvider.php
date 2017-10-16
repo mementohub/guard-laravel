@@ -12,7 +12,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->setupConfig();
     }
 
     /**
@@ -29,5 +29,14 @@ class AuthServiceProvider extends ServiceProvider
         Auth::extend('jwt', function ($app, $name, array $config) {
             return new JwtGuard(Auth::createUserProvider($config['provider']), app('request'));
         });
+    }
+
+    protected function setupConfig()
+    {
+        $source = realpath(__DIR__.'/../resources/config/permissions.php');
+
+        $this->publishes([$source => config_path('permissions.php')], 'config');
+
+        $this->mergeConfigFrom($source, 'permissions');
     }
 }
