@@ -9,12 +9,12 @@ Depends on the [iMemento JWT](https://gitlab.com/imemento/composer/packages/jwt)
 composer require imemento/guard-laravel
 ```
 
-Add the service to config/app.php:
+Add the service to `config/app.php`:
 ```php
 iMemento\Guard\Laravel\AuthServiceProvider::class,
 ```
 
-In config/auth.php add a guard with *jwt* as the driver:
+In `config/auth.php` add a guard with *jwt* as the driver:
 ```php
 'api' => [
 	'driver' => 'jwt',
@@ -22,7 +22,7 @@ In config/auth.php add a guard with *jwt* as the driver:
 ],
 ```
 
-In config/auth.php add a user provider with *static* as the driver:
+In `config/auth.php` add a user provider with *static* as the driver:
 ```php
 'users' => [
 	'driver' => 'static',
@@ -31,6 +31,15 @@ In config/auth.php add a user provider with *static* as the driver:
 ```
 
 ## Usage
+
+To use the JWT Guard, in `app/Http/Kernel.php` you must add the guard to the *api* middleware group:
+```php
+'api' => [
+	'throttle:60,1',
+	'bindings',
+	'auth:api', #this
+],
+```
 
 The following fields are added to the current user and can be used in the application's policies.
 ```json
@@ -42,4 +51,4 @@ The following fields are added to the current user and can be used in the applic
   "permissions": ["read","write"]
 }
 ```
-The fields *id*, *agency_id* and *roles* can be null.
+The fields *id*, *agency_id* can be null, *roles* can be empty.
