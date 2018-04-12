@@ -36,7 +36,5 @@ class AuthServiceProvider extends ServiceProvider
         $source = realpath(__DIR__.'/../resources/config/permissions.php');
 
         $this->publishes([$source => config_path('permissions.php')], 'config');
-
-        $this->mergeConfigFrom($source, 'permissions');
     }
 }

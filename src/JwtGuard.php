@@ -7,8 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Support\Str;
-use iMemento\JWT\Guard as TokenGuard;
-use iMemento\JWT\Payload;
 
 class JwtGuard implements Guard
 {
@@ -26,7 +24,7 @@ class JwtGuard implements Guard
      *
      * @var string
      */
-    protected $token_key = 'Bearer';
+    protected $token_key = 'Bearer ';
 
     /**
      * Create a new authentication guard.
@@ -47,16 +45,10 @@ class JwtGuard implements Guard
      */
     public function user()
     {
-        if(!is_null($this->user)) {
+        if(!is_null($this->user))
             return $this->user;
-        }
 
-        $token = new TokenGuard($this->getTokenForRequest());
-
-        $user = Payload::getUser($token->getUser());
-        $roles = $token->getRoles();
-
-        $this->user = $this->provider->createFromPayload($user, $roles);
+        $this->user = $this->provider->createFromJWT($this->getTokenForRequest());
 
         return $this->user;
     }
@@ -71,8 +63,8 @@ class JwtGuard implements Guard
     {
         $header = $this->request->header('Authorization', '');
 
-        if (Str::startsWith($header, $this->token_key . ' ')) {
-            return Str::substr($header, Str::length($this->token_key . ' '));
+        if (Str::startsWith($header, $this->token_key)) {
+            return Str::substr($header, Str::length($this->token_key));
         }
 
         throw new \Exception('Missing or invalid Authorization header.');
