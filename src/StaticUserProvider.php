@@ -4,8 +4,9 @@ namespace iMemento\Guard\Laravel;
 
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Auth\Authenticatable as UserContract;
-use Illuminate\Support\Facades\Session;
 use iMemento\JWT\JWT;
+use Session;
+use Crypt;
 
 class StaticUserProvider implements UserProvider
 {
@@ -68,11 +69,13 @@ class StaticUserProvider implements UserProvider
      */
     public function retrieveById($identifier)
     {
-        return null;
-        /*if(! Session::has('user'))
+        if(! Session::has('user'))
             return null;
 
-        return $this->createModel(Session::get('user', []));*/
+
+        $user = json_decode(Crypt::decryptString(Session::get('user')), true);
+
+        return $this->createModel($user);
     }
 
     /**
