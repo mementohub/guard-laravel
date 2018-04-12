@@ -5,10 +5,14 @@ namespace iMemento\Guard\Laravel;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Auth\Authenticatable as UserContract;
 use Illuminate\Support\Facades\Session;
-use iMemento\SDK\Authentication\User;
+use iMemento\JWT\JWT;
 
 class StaticUserProvider implements UserProvider
 {
+
+    protected $app_name = 'APP_NAME';
+
+    protected $auth_public_key = 'AUTH_KEY';
 
     /**
      * The name of the Eloquent user model.
@@ -37,24 +41,22 @@ class StaticUserProvider implements UserProvider
     }
 
     /**
-     * @param $user
-     * @param $roles
+     * @param string $jwt
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function createFromPayload($user, $roles)
+    public function createFromJWT(string $jwt)
     {
-        //imemento auth user
-        $i_user = new User($user);
-        $i_user->createPermissions($this->permissions, (array) $roles);
+        $auth_public_key = JWT::getPublicKey($this->auth_public_key);
+        $app_name = env($this->app_name);
 
-        //get the user data
-        $attributes = $i_user->getAttributes();
+        $data = JWT::decode($jwt, $auth_public_key);
+        $roles = $data->roles->$app_name;
 
         //create our Authenticatable User
-        $model = $this->createModel($attributes);
-        $model->user = $i_user;
+        $user = $this->createModel($data);
+        $user->createPermissions($this->permissions, $roles);
 
-        return $model;
+        return $user;
     }
 
     /**
@@ -66,10 +68,11 @@ class StaticUserProvider implements UserProvider
      */
     public function retrieveById($identifier)
     {
-        if(!Session::has('user'))
+        return null;
+        /*if(! Session::has('user'))
             return null;
 
-        return $this->createModel(Session::get('user', []));
+        return $this->createModel(Session::get('user', []));*/
     }
 
     /**
@@ -122,14 +125,14 @@ class StaticUserProvider implements UserProvider
     /**
      * Create a new instance of the model.
      *
-     * @param $user
+     * @param $data
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function createModel($user)
+    public function createModel($data)
     {
         $class = '\\'.ltrim($this->model, '\\');
 
-        return new $class($user);
+        return new $class($data);
     }
 
     /**
