@@ -56,7 +56,7 @@ class StaticUserProvider implements UserProvider
         $roles = $data->roles->$app_name ?? [];
 
         //create our Authenticatable User
-        $user = $this->createModel($data);
+        $user = $this->createModel((array) $data);
         $user->createPermissions($this->permissions, $roles);
 
         return $user;
