@@ -52,12 +52,18 @@ class StaticUserProvider implements UserProvider
         $auth_public_key = JWT::getPublicKey($this->auth_public_key);
         $app_name = env($this->app_name);
 
-        $data = JWT::decode($jwt, $auth_public_key);
-        $roles = $data->roles->$app_name ?? [];
+        $user_jwt = JWT::decode($jwt, $auth_public_key);
+
+        $data = [
+            'id' => $user_jwt->user_id,
+            'org_ids' => $user_jwt->org_ids,
+            'org_user_ids' => $user_jwt->org_user_ids,
+            'roles' => $user_jwt->roles->$app_name ?? [],
+        ];
 
         //create our Authenticatable User
-        $user = $this->createModel((array) $data);
-        $user->createPermissions($this->permissions, $roles);
+        $user = $this->createModel($data);
+        $user->createPermissions($this->permissions, $user->roles);
 
         return $user;
     }
