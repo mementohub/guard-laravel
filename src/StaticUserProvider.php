@@ -39,6 +39,8 @@ class StaticUserProvider implements UserProvider
     {
         $this->model = $model;
         $this->permissions = $permissions;
+
+        $this->auth_public_key = base_path(env($this->auth_public_key));
     }
 
     /**
