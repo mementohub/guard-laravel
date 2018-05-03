@@ -56,8 +56,8 @@ class StaticUserProvider implements UserProvider
 
         $data = [
             'id' => $user_jwt->user_id,
-            'org_ids' => $user_jwt->org_ids,
-            'org_user_ids' => $user_jwt->org_user_ids,
+            'org_ids' => $user_jwt->org_ids ?? [],
+            'org_user_ids' => $user_jwt->org_user_ids ?? [],
             'token' => $jwt,
             'roles' => $user_jwt->roles->$app_name ?? [],
         ];
