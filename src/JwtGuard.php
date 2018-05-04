@@ -12,18 +12,10 @@ class JwtGuard implements Guard
 {
     use GuardHelpers;
 
-    /**
-     * The request instance.
-     *
-     * @var \Illuminate\Http\Request
-     */
     protected $request;
 
-    /**
-     * The name of the token key.
-     *
-     * @var string
-     */
+    protected $provider;
+
     protected $token_key = 'Bearer ';
 
     /**
@@ -42,6 +34,7 @@ class JwtGuard implements Guard
      * Get the currently authenticated user.
      *
      * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     * @throws \Exception
      */
     public function user()
     {
