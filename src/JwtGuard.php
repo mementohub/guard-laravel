@@ -2,6 +2,7 @@
 
 namespace iMemento\Guard\Laravel;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\GuardHelpers;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Auth\Guard;
@@ -60,7 +61,7 @@ class JwtGuard implements Guard
             return Str::substr($header, Str::length($this->token_key));
         }
 
-        throw new \Exception('Missing or invalid Authorization header.');
+        throw new AuthorizationException('Missing or invalid Authorization header.');
     }
 
     /**
