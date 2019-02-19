@@ -2,17 +2,18 @@
 
 namespace iMemento\Guard\Laravel;
 
+use Exception;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Auth\Authenticatable as UserContract;
 use iMemento\JWT\JWT;
 use Session;
 use Crypt;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class StaticUserProvider implements UserProvider
 {
 
     protected $app_name = 'APP_NAME';
-
     protected $auth_public_key = 'AUTH_KEY';
 
     /**
@@ -39,7 +40,6 @@ class StaticUserProvider implements UserProvider
     {
         $this->model = $model;
         $this->permissions = $permissions;
-
         $this->auth_public_key = base_path(env($this->auth_public_key));
     }
 
@@ -52,7 +52,11 @@ class StaticUserProvider implements UserProvider
         $auth_public_key = JWT::getPublicKey($this->auth_public_key);
         $app_name = env($this->app_name);
 
-        $user_jwt = JWT::decode($jwt, $auth_public_key);
+        try {
+            $user_jwt = JWT::decode($jwt, $auth_public_key);
+        } catch (Exception $e) {
+            throw new AccessDeniedHttpException($e->getMessage());
+        }
 
         $data = [
             'id' => $user_jwt->user_id,
@@ -64,7 +68,6 @@ class StaticUserProvider implements UserProvider
             'roles' => $user_jwt->roles->$app_name ?? [],
         ];
 
-        //create our Authenticatable User
         $user = $this->createModel($data);
         $user->createPermissions($this->permissions, $user->roles);
 
@@ -82,7 +85,6 @@ class StaticUserProvider implements UserProvider
     {
         if(! Session::has('user'))
             return null;
-
 
         $user = json_decode(Crypt::decryptString(Session::get('user')), true);
 
