@@ -13,10 +13,9 @@ class JwtGuard implements Guard
 {
     use GuardHelpers;
 
+    protected $user;
     protected $request;
-
     protected $provider;
-
     protected $token_key = 'Bearer ';
 
     /**
@@ -39,7 +38,7 @@ class JwtGuard implements Guard
      */
     public function user()
     {
-        if(!is_null($this->user))
+        if (! is_null($this->user))
             return $this->user;
 
         $this->user = $this->provider->createFromJWT($this->getTokenForRequest());
@@ -57,9 +56,8 @@ class JwtGuard implements Guard
     {
         $header = $this->request->header('Authorization', '');
 
-        if (Str::startsWith($header, $this->token_key)) {
+        if (Str::startsWith($header, $this->token_key))
             return Str::substr($header, Str::length($this->token_key));
-        }
 
         throw new AuthorizationException('Missing or invalid Authorization header.');
     }
