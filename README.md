@@ -1,7 +1,7 @@
 # iMemento JWT Guard for Laravel
 
 Takes care of the authorization and sets the roles and permissions for the user and consumer.
-Depends on the [iMemento JWT](https://gitlab.com/imemento/composer/packages/jwt) package for JWT related tasks. Decrypting the tokens happens in the JWT package.
+Depends on the [iMemento JWT](https://github.com/mementohub/jwt) package for JWT related tasks. Decrypting the tokens happens in the JWT package.
 
 ## Install
 
@@ -9,7 +9,7 @@ Depends on the [iMemento JWT](https://gitlab.com/imemento/composer/packages/jwt)
 composer require imemento/guard-laravel
 ```
 
-Add the service to `config/app.php`:
+The package uses Service Discovery. Still, if necessary, you can add the service to `config/app.php`:
 ```php
 iMemento\Guard\Laravel\AuthServiceProvider::class,
 ```
@@ -17,22 +17,34 @@ iMemento\Guard\Laravel\AuthServiceProvider::class,
 In `config/auth.php` add a guard with *jwt* as the driver:
 ```php
 'api' => [
-	'driver' => 'jwt',
-	'provider' => 'users',
+	'driver' 	=> 'jwt',
+	'provider' 	=> 'users',
 ],
 ```
 
-In `config/auth.php` add a user provider with *static* as the driver:
+In `config/auth.php` add a user provider with *static* as the driver.
+The model needs to be an instance of `iMemento\SDK\Auth\User::class` or an extension of it.
 ```php
 'users' => [
-	'driver' => 'static',
-	'model' => App\User::class,
+	'driver' 	=> 'static',
+	'model' 	=> iMemento\SDK\Auth\User::class,
 ],
 ```
+
+## Dependencies
+
+Since this package handles multiple operations in order to achieve the desired results, the following
+`.env` variables should be properly defined:
+
+```bash
+AUTH_KEY=
+```
+
 
 ## Usage
 
-To use the JWT Guard, in `app/Http/Kernel.php` you must add the guard to the *api* middleware group:
+To use the JWT Guard for all the routes in your `routes/api.php` file you just need to add it
+to the `api` middleware group in `app/Http/Kernel.php`.
 ```php
 'api' => [
 	'throttle:60,1',
@@ -40,6 +52,18 @@ To use the JWT Guard, in `app/Http/Kernel.php` you must add the guard to the *ap
 	'auth:api', #this
 ],
 ```
+
+If your API exposes public endpoints, the ones that should be guarded by the JWT Guard should be
+specifically grouped:
+```php
+	Route::group(['middleware' => 'auth:api'], function ()) {
+		//...
+	}
+```
+
+## Authenticated user
+
+Once the Guard has been applied, the app will have access to an authenticated user through `auth()->user()`.
 
 The following fields are added to the current user and can be used in the application's policies.
 ```json
