@@ -7,6 +7,9 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
 >
+   <php>
+        <env name="APP_NAME" value="ssr_console" />
+    </php>
    <testsuites>
         <testsuite name="Module Test Suite">
             <directory suffix="Test.php">./tests</directory>
