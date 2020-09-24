@@ -1,11 +1,13 @@
 <?php
 
-namespace iMemento\Guard\Laravel;
+namespace iMemento\Guard\Laravel\Tests;
 
-use Illuminate\Auth\GenericUser;
+use ReflectionClass;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
+use Illuminate\Auth\GenericUser;
+use iMemento\Guard\Laravel\JwtGuard;
+use iMemento\Guard\Laravel\StaticUserProvider;
 
 /**
  * @covers Client
@@ -16,21 +18,22 @@ class JwtGuardTest extends TestCase
     public $request;
     public $user;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->provider = $this->getMockBuilder(StaticUserProvider::class)
             ->setConstructorArgs([new GenericUser([]), ['admin' => 'test']])
-            ->setMethods([/*'createFromJWT', 'retrieveById',*/ 'createModel', /*'getModel', 'setModel',*/ 'getTokenForRequest'])
+            ->onlyMethods([/*'createFromJWT', 'retrieveById',*/ 'createModel', /*'getModel', 'setModel',*/])
+            ->addMethods(['getTokenForRequest'])
             ->disableOriginalConstructor()
             ->getMock();
 
         $this->request = $this->getMockBuilder(Request::class)
-            ->setMethods(['getMethod', 'retrieveItem', 'getRealMethod', 'all', 'getInputSource', 'get', 'has', 'header'])
+            ->onlyMethods(['getMethod', 'retrieveItem', 'getRealMethod', 'all', 'getInputSource', 'get', 'has', 'header'])
             ->disableOriginalConstructor()
             ->getMock();
 
         $this->user = $this->getMockBuilder(GenericUser::class)
-            ->setMethods(['createPermissions', 'getPermissions', 'getRoles'])
+            ->addMethods(['createPermissions', 'getPermissions', 'getRoles'])
             ->disableOriginalConstructor()
             ->getMock();
     }
@@ -87,5 +90,4 @@ class JwtGuardTest extends TestCase
         $reflection_property->setAccessible(true);
         $reflection_property->setValue($object, $value);
     }
-    
 }

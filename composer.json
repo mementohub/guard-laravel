@@ -1,7 +1,7 @@
 {
     "name": "imemento/guard-laravel",
     "description": "Our custom guard for Laravel",
-    "homepage": "https://gitlab.com/imemento/composer/packages/guard-laravel",
+    "homepage": "https://github.com/mementohub/guard-laravel",
     "license": "MIT",
     "authors": [
         {
@@ -12,12 +12,13 @@
     ],
     "require": {
         "php": "^7.1",
-        "laravel/framework": "*",
-        "imemento/sdk-auth": "dev-master",
-        "imemento/jwt": "dev-master"
+        "laravel/framework": "^5.8 || ^6.0 || ^7.0 || ^8.0",
+        "imemento/sdk-auth": "^0.1.0",
+        "imemento/jwt": "^0.1.0"
     },
     "require-dev": {
-        "phpunit/phpunit" : "^7.0"
+        "phpunit/phpunit": "^8.0 || ^9.0",
+        "orchestra/testbench": "^3.8 || ^4.0 || ^5.0 || ^6.0"
     },
     "autoload": {
         "psr-4": {
@@ -26,7 +27,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "iMemento\\Guard\\Laravel\\Test\\": "tests"
+            "iMemento\\Guard\\Laravel\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -35,10 +36,6 @@
     "config": {
         "sort-packages": true
     },
-    "repositories": [
-        {"type": "composer", "url": "https://repo.packagist.com/imemento/"},
-        {"packagist.org": false}
-    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "extra": {

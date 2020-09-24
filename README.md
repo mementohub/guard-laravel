@@ -1,4 +1,8 @@
 # iMemento JWT Guard for Laravel
+[![Build Status](https://travis-ci.org/mementohub/guard-laravel.svg?branch=master)](https://travis-ci.org/mementohub/guard-laravel)
+[![Latest Stable Version](https://poser.pugx.org/imemento/guard-laravel/v/stable)](https://packagist.org/packages/imemento/guard-laravel)
+[![License](https://poser.pugx.org/imemento/guard-laravel/license)](https://packagist.org/packages/imemento/guard-laravel)
+[![Total Downloads](https://poser.pugx.org/imemento/guard-laravel/downloads)](https://packagist.org/packages/imemento/guard-laravel)
 
 Takes care of the authorization and sets the roles and permissions for the user and consumer.
 Depends on the [iMemento JWT](https://gitlab.com/imemento/composer/packages/jwt) package for JWT related tasks. Decrypting the tokens happens in the JWT package.
