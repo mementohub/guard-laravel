@@ -22,18 +22,17 @@ class JwtGuardTest extends TestCase
     {
         $this->provider = $this->getMockBuilder(StaticUserProvider::class)
             ->setConstructorArgs([new GenericUser([]), ['admin' => 'test']])
-            ->onlyMethods([/*'createFromJWT', 'retrieveById',*/ 'createModel', /*'getModel', 'setModel',*/])
-            ->addMethods(['getTokenForRequest'])
+            ->setMethods([/*'createFromJWT', 'retrieveById',*/'createModel', /*'getModel', 'setModel',*/ 'getTokenForRequest'])
             ->disableOriginalConstructor()
             ->getMock();
 
         $this->request = $this->getMockBuilder(Request::class)
-            ->onlyMethods(['getMethod', 'retrieveItem', 'getRealMethod', 'all', 'getInputSource', 'get', 'has', 'header'])
+            ->setMethods(['getMethod', 'retrieveItem', 'getRealMethod', 'all', 'getInputSource', 'get', 'has', 'header'])
             ->disableOriginalConstructor()
             ->getMock();
 
         $this->user = $this->getMockBuilder(GenericUser::class)
-            ->addMethods(['createPermissions', 'getPermissions', 'getRoles'])
+            ->setMethods(['createPermissions', 'getPermissions', 'getRoles'])
             ->disableOriginalConstructor()
             ->getMock();
     }
