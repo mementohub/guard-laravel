@@ -11,10 +11,10 @@
         }
     ],
     "require": {
-        "php": "^7.3",
+        "php": "^8.0",
         "laravel/framework": "^8.0",
-        "imemento/sdk-auth": "~8.0.0",
-        "imemento/jwt": "~8.0.0"
+        "imemento/sdk-auth": "~8.1.0",
+        "imemento/jwt": "~8.1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.0",

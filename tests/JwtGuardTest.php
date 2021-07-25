@@ -36,6 +36,8 @@ class JwtGuardTest extends TestCase
             ->addMethods(['createPermissions', 'getPermissions', 'getRoles'])
             ->disableOriginalConstructor()
             ->getMock();
+
+        $this->user->roles = [];
     }
 
     public function test_user_is_created_correctly()
